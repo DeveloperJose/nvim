@@ -240,36 +240,6 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
-  -- 'TimUntersberger/neogit',
-  -- 'tpope/vim-fugitive',
-  {
-    'mfussenegger/nvim-dap',
-    optional = false,
-    config = function()
-      local dap = require 'dap'
-      dap.configurations.php = {
-        {
-          name = 'awbw',
-          hostname = '0.0.0.0',
-          type = 'php',
-          request = 'launch',
-          port = 9003,
-          pathMappings = {
-            ['/var/www/'] = '${workspaceFolder}/public_html',
-          },
-        },
-      }
-    end,
-    opts = function()
-      local dap = require 'dap'
-      local path = require('mason-registry').get_package('php-debug-adapter'):get_install_path()
-      dap.adapters.php = {
-        type = 'executable',
-        command = 'node',
-        args = { path .. '/extension/out/phpDebug.js' },
-      }
-    end,
-  },
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
   -- keys can be used to configure plugin behavior/loading/etc.
@@ -438,9 +408,9 @@ require('lazy').setup({
         --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
         --   },
         -- },
-        pickers = {
-          find_files = { hidden = true },
-        },
+        -- pickers = {
+        -- find_files = { hidden = true },
+        -- },
         extensions = {
           ['ui-select'] = {
             require('telescope.themes').get_dropdown(),

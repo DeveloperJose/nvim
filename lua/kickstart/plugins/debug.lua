@@ -22,59 +22,50 @@ return {
     'jay-babu/mason-nvim-dap.nvim',
 
     -- Add your own debuggers here
-    'leoluz/nvim-dap-go',
   },
   keys = {
-    -- Basic debugging keymaps, feel free to change to your liking!
     {
-      '<F5>',
+      '<leader>dl',
       function()
-        require('dap').continue()
+        require('dap').run_last()
       end,
-      desc = 'Debug: Start/Continue',
+      desc = 'Debug (Run Last Config)',
     },
     {
-      '<F1>',
-      function()
-        require('dap').step_into()
-      end,
-      desc = 'Debug: Step Into',
-    },
-    {
-      '<F2>',
-      function()
-        require('dap').step_over()
-      end,
-      desc = 'Debug: Step Over',
-    },
-    {
-      '<F3>',
-      function()
-        require('dap').step_out()
-      end,
-      desc = 'Debug: Step Out',
-    },
-    {
-      '<leader>b',
+      '<leader>db',
       function()
         require('dap').toggle_breakpoint()
       end,
-      desc = 'Debug: Toggle Breakpoint',
+      desc = 'Debug (Toggle Breakpoint)',
     },
     {
-      '<leader>B',
+      '<leader>dr',
       function()
-        require('dap').set_breakpoint(vim.fn.input 'Breakpoint condition: ')
+        require('dap').repl.open()
       end,
-      desc = 'Debug: Set Breakpoint',
+      desc = 'Debug (REPL)',
+    },
+    {
+      '<leader>do',
+      function()
+        require('dap').step_over()
+      end,
+      desc = 'Debug (Step Over)',
+    },
+    {
+      '<leader>di',
+      function()
+        require('dap').step_into()
+      end,
+      desc = 'Debug (Step Into)',
     },
     -- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
     {
-      '<F7>',
+      '<leader>ds',
       function()
         require('dapui').toggle()
       end,
-      desc = 'Debug: See last session result.',
+      desc = 'Debug (See last session result)',
     },
   },
   config = function()
@@ -94,7 +85,7 @@ return {
       -- online, please don't ask me how to install them :)
       ensure_installed = {
         -- Update this to ensure that you have the debuggers for the langs you want
-        'delve',
+        'php-debug-adapter',
       },
     }
 
@@ -136,13 +127,25 @@ return {
     dap.listeners.before.event_terminated['dapui_config'] = dapui.close
     dap.listeners.before.event_exited['dapui_config'] = dapui.close
 
-    -- Install golang specific config
-    require('dap-go').setup {
-      delve = {
-        -- On Windows delve must be run attached or it crashes.
-        -- See https://github.com/leoluz/nvim-dap-go/blob/main/README.md#configuring
-        detached = vim.fn.has 'win32' == 0,
+    -- PHP Debugger
+    dap.configurations.php = {
+      {
+        name = 'awbw',
+        hostname = '0.0.0.0',
+        type = 'php',
+        request = 'launch',
+        port = 9003,
+        pathMappings = {
+          ['/var/www/'] = '${workspaceFolder}/public_html',
+        },
       },
+    }
+
+    local path = require('mason-registry').get_package('php-debug-adapter'):get_install_path()
+    dap.adapters.php = {
+      type = 'executable',
+      command = 'node',
+      args = { path .. '/extension/out/phpDebug.js' },
     }
   end,
 }
