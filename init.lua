@@ -696,6 +696,11 @@ require('lazy').setup({
             },
           },
         },
+
+        -- ruff = {},
+        pyright = {},
+        phpactor = {},
+        ts_ls = {},
       }
 
       -- Ensure the servers and tools above are installed
@@ -714,6 +719,12 @@ require('lazy').setup({
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
+        'phpstan', -- PHP Linter
+        'php-cs-fixer', -- PHP Formatter
+        'php-debug-adapter', -- PHP DAP
+        'eslint_d', -- JS/TS Linter
+        'prettierd', -- JS/TS Formatter
+        'markdownlint', -- Markdown Linter
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -749,23 +760,25 @@ require('lazy').setup({
       },
     },
     opts = {
-      notify_on_error = false,
-      format_on_save = function(bufnr)
-        -- Disable "format_on_save lsp_fallback" for languages that don't
-        -- have a well standardized coding style. You can add additional
-        -- languages here or re-enable it for the disabled ones.
-        local disable_filetypes = { c = true, cpp = true }
-        if disable_filetypes[vim.bo[bufnr].filetype] then
-          return nil
-        else
-          return {
-            timeout_ms = 500,
-            lsp_format = 'fallback',
-          }
-        end
-      end,
+      notify_on_error = true,
+      -- format_on_save = function(bufnr)
+      --   -- Disable "format_on_save lsp_fallback" for languages that don't
+      --   -- have a well standardized coding style. You can add additional
+      --   -- languages here or re-enable it for the disabled ones.
+      --   local disable_filetypes = { c = true, cpp = true }
+      --   if disable_filetypes[vim.bo[bufnr].filetype] then
+      --     return nil
+      --   else
+      --     return {
+      --       timeout_ms = 500,
+      --       lsp_format = 'fallback',
+      --     }
+      --   end
+      -- end,
       formatters_by_ft = {
         lua = { 'stylua' },
+        php = { 'php_cs_fixer' },
+        -- python = { 'ruff' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --

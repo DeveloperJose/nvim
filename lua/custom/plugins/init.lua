@@ -8,8 +8,8 @@ vim.keymap.set('n', 'h', '<Cmd> echo "Disabled H"<CR>')
 vim.keymap.set('n', 'l', '<Cmd> echo "Disabled L"<CR>')
 
 -- TIP: Disable arrow keys in normal mode
-vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
-vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
+vim.keymap.set('n', '<left>', '<cmd>echo "Disabled"<CR>')
+vim.keymap.set('n', '<right>', '<cmd>echo "Disabled"<CR>')
 vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
 vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
 
@@ -20,6 +20,7 @@ require('telescope').setup {
   pickers = {
     find_files = { hidden = true },
   },
+  defaults = { file_ignore_patterns = { '.git/', 'node_modules/' } },
 }
 
 return {}
