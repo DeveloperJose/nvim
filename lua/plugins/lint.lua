@@ -8,6 +8,9 @@ return {
       lint.linters_by_ft = {
         -- markdown = { 'markdownlint' },
         php = { 'phpstan' },
+        python = { 'ruff' },
+        typescript = { 'eslint_d' },
+        javascript = { 'eslint_d' },
       }
 
       -- To allow other plugins to add linters to require('lint').linters_by_ft,

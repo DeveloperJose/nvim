@@ -19,7 +19,7 @@ return {
         -- Disable "format_on_save lsp_fallback" for languages that don't
         -- have a well standardized coding style. You can add additional
         -- languages here or re-enable it for the disabled ones.
-        local disable_filetypes = { c = true, cpp = true, php = true}
+        local disable_filetypes = { c = true, cpp = true, php = true }
         if disable_filetypes[vim.bo[bufnr].filetype] then
           return nil
         else
@@ -32,7 +32,9 @@ return {
       formatters_by_ft = {
         lua = { 'stylua' },
         php = { 'php_cs_fixer' },
-        -- python = { 'ruff' },
+        python = { 'ruff' },
+        javascript = { 'prettierd' },
+        typescript = { 'prettierd' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
