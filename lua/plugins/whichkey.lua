@@ -8,6 +8,7 @@ return { -- Useful plugin to show you pending keybinds.
       { '<leader>s', group = '[S]earch' },
       { '<leader>t', group = '[T]oggle' },
       { '<leader>h', group = '[H]arpoon' },
+      { 'gr', group = 'LSP' },
     },
 
     -- delay between pressing a key and opening which-key (milliseconds)
