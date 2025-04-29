@@ -5,6 +5,17 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 vim.g.have_nerd_font = true
 
+-- Disable jumping by LSP in insert mode
+vim.api.nvim_set_keymap('i', '<Tab>', '<Tab>', { noremap = true })
+
+-- Remove 'r' and 'o' from formatoptions
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = '*',
+  callback = function()
+    vim.opt.formatoptions:remove { 'r', 'o' }
+  end,
+})
+
 -- [[ Setting options ]]
 -- See `:help vim.opt`
 -- NOTE: You can change these options as you wish!
@@ -207,15 +218,21 @@ require('lazy').setup({
       --  and try some other statusline plugin
       local statusline = require 'mini.statusline'
       -- set use_icons to true if you have a Nerd Font
-      statusline.setup { use_icons = vim.g.have_nerd_font }
 
       -- You can configure sections in the statusline by overriding their
       -- default behavior. For example, here we set the section for
       -- cursor location to LINE:COLUMN
       ---@diagnostic disable-next-line: duplicate-set-field
       statusline.section_location = function()
-        return '%2l:%-2v'
+        return ''
       end
+
+      ---@diagnostic disable-next-line: duplicate-set-field
+      statusline.section_diff = function()
+        return ''
+      end
+
+      statusline.setup { use_icons = vim.g.have_nerd_font }
 
       -- ... and there is more!
       --  Check out: https://github.com/echasnovski/mini.nvim
@@ -242,6 +259,7 @@ require('lazy').setup({
         'vim',
         'vimdoc',
         'python',
+        'javascript',
         'typescript',
         'php',
       },
