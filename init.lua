@@ -5,6 +5,9 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 vim.g.have_nerd_font = true
 
+-- Default to formatter only applying to modified lines
+vim.g.format_modifications_only = true
+
 -- Disable jumping by LSP in insert mode
 vim.api.nvim_set_keymap('i', '<Tab>', '<Tab>', { noremap = true })
 
@@ -236,7 +239,14 @@ require('lazy').setup({
 
       -- ... and there is more!
       --  Check out: https://github.com/echasnovski/mini.nvim
-      require('mini.move').setup()
+      require('mini.move').setup {
+        mappings = {
+          line_left = '',
+          line_right = '',
+          line_down = '',
+          line_up = '',
+        },
+      }
       require('mini.indentscope').setup()
     end,
   },

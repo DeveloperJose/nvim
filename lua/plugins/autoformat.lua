@@ -1,3 +1,51 @@
+-- https://github.com/stevearc/conform.nvim/issues/92
+-- Format modified lines capability
+local default_format_options = {
+  lsp_fallback = true,
+  async = false,
+  timeout = 500,
+}
+function format_hunks()
+  local ignore_filetypes = { 'lua' }
+  if vim.tbl_contains(ignore_filetypes, vim.bo.filetype) then
+    vim.notify('range formatting for ' .. vim.bo.filetype .. ' not working properly.')
+    return
+  end
+
+  local hunks = require('gitsigns').get_hunks()
+  if hunks == nil then
+    return
+  end
+
+  local format = require('conform').format
+
+  local function format_range()
+    if next(hunks) == nil then
+      vim.notify('done formatting git hunks', 'info', { title = 'formatting' })
+      return
+    end
+    local hunk = nil
+    while next(hunks) ~= nil and (hunk == nil or hunk.type == 'delete') do
+      hunk = table.remove(hunks)
+    end
+
+    if hunk ~= nil and hunk.type ~= 'delete' then
+      local start = hunk.added.start
+      local last = start + hunk.added.count
+      -- nvim_buf_get_lines uses zero-based indexing -> subtract from last
+      local last_hunk_line = vim.api.nvim_buf_get_lines(0, last - 2, last - 1, true)[1]
+      local range = { start = { start, 0 }, ['end'] = { last - 1, last_hunk_line:len() } }
+      format({ range = range, async = true, lsp_fallback = true }, function()
+        vim.defer_fn(function()
+          format_range()
+        end, 1)
+      end)
+    end
+  end
+
+  format_range()
+end
+
 return {
   { -- Autoformat
     'stevearc/conform.nvim',
@@ -5,28 +53,35 @@ return {
     cmd = { 'ConformInfo' },
     keys = {
       {
-        '<leader>f',
+        '<leader>fb',
         function()
+          local before = vim.g.format_modifications_only
+          vim.g.format_modifications_only = false
           require('conform').format { async = true, lsp_format = 'fallback' }
+          vim.g.format_modifications_only = before
         end,
         mode = '',
-        desc = '[F]ormat buffer',
+        desc = '[F]ormat [B]uffer',
+      },
+      {
+        '<leader>ff',
+        format_hunks,
+        desc = '[F]ormat Modi[f]ied Lines',
       },
     },
     opts = {
       notify_on_error = true,
       format_on_save = function(bufnr)
-        -- Disable "format_on_save lsp_fallback" for languages that don't
-        -- have a well standardized coding style. You can add additional
-        -- languages here or re-enable it for the disabled ones.
-        local disable_filetypes = { c = true, cpp = true, php = true }
-        if disable_filetypes[vim.bo[bufnr].filetype] then
-          return nil
+        -- Disable with a global or buffer-local variable
+        if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
+          return
+        end
+        if vim.g.format_modifications_only then
+          -- Prefer to format Git hunks over entire file
+          format_hunks()
         else
-          return {
-            timeout_ms = 500,
-            lsp_format = 'fallback',
-          }
+          -- Format entire file
+          return default_format_options
         end
       end,
       formatters_by_ft = {
