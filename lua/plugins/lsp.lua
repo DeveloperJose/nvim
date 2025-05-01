@@ -225,7 +225,6 @@ return {
         'php-debug-adapter', -- PHP DAP
         'eslint_d', -- JS/TS Linter
         'prettierd', -- JS/TS Formatter
-        'markdownlint', -- Markdown Linter
         'ruff', -- Python Formatter and Linter
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
