@@ -6,7 +6,7 @@ vim.g.maplocalleader = ' '
 vim.g.have_nerd_font = true
 
 -- Default to formatter only applying to modified lines
-vim.g.format_modifications_only = true
+vim.g.format_modifications_only = false
 
 -- Disable jumping by LSP in insert mode
 vim.api.nvim_set_keymap('i', '<Tab>', '<Tab>', { noremap = true })

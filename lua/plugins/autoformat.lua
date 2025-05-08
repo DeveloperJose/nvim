@@ -4,9 +4,11 @@ local default_format_options = {
   lsp_fallback = true,
   async = false,
   timeout = 500,
+  ignore_filetypes = { php = true, javascript = true },
 }
-function format_hunks()
-  local ignore_filetypes = { 'lua' }
+
+function format_hunks(format_options)
+  local ignore_filetypes = { 'lua', 'php' }
   if vim.tbl_contains(ignore_filetypes, vim.bo.filetype) then
     vim.notify('range formatting for ' .. vim.bo.filetype .. ' not working properly.')
     return
@@ -79,6 +81,8 @@ return {
         if vim.g.format_modifications_only then
           -- Prefer to format Git hunks over entire file
           format_hunks()
+        elseif default_format_options.ignore_filetypes[vim.bo[bufnr].filetype] then
+          return nil
         else
           -- Format entire file
           return default_format_options
