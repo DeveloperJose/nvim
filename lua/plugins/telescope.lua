@@ -49,7 +49,15 @@ return { -- Fuzzy Finder (files, lsp, etc)
       --  All the info you're looking for is in `:help telescope.setup()`
       --
       defaults = {
-        file_ignore_patterns = { '.git/', 'node_modules/' },
+        file_ignore_patterns = { 'public_html/js/lib/', '.git/', 'node_modules/' },
+        layout_strategy = 'vertical', -- or 'horizontal', your choice
+        layout_config = {
+          width = 0.95,
+          height = 0.95,
+          prompt_position = 'top', -- Optional: for better UX
+        },
+        sorting_strategy = 'ascending', -- Optional
+        winblend = 0, -- Fully opaque background
       },
 
       pickers = {

@@ -55,7 +55,7 @@ return {
     cmd = { 'ConformInfo' },
     keys = {
       {
-        '<leader>fb',
+        '<leader>ff',
         function()
           local before = vim.g.format_modifications_only
           vim.g.format_modifications_only = false
@@ -63,25 +63,25 @@ return {
           vim.g.format_modifications_only = before
         end,
         mode = '',
-        desc = '[F]ormat [B]uffer',
+        desc = '[F]ormat [F]ile',
       },
       {
-        '<leader>ff',
+        '<leader>fm',
         format_hunks,
-        desc = '[F]ormat Modi[f]ied Lines',
+        desc = '[F]ormat [M]odified Lines',
       },
     },
     opts = {
       notify_on_error = true,
       format_on_save = function(bufnr)
         -- Disable with a global or buffer-local variable
-        if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
-          return
-        end
-        if vim.g.format_modifications_only then
-          -- Prefer to format Git hunks over entire file
-          format_hunks()
-        elseif default_format_options.ignore_filetypes[vim.bo[bufnr].filetype] then
+        -- if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
+        --   return
+        -- end
+        -- if vim.g.format_modifications_only then
+        --   -- Prefer to format Git hunks over entire file
+        --   format_hunks()
+        if default_format_options.ignore_filetypes[vim.bo[bufnr].filetype] then
           return nil
         else
           -- Format entire file
